@@ -1,0 +1,187 @@
+
+{% extends "base.html" %}
+
+{% block title %}Nearby Services | CityAssist{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+.nearby-page {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+.nearby-heading {
+    margin-bottom: 22px;
+}
+.nearby-heading h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+.nearby-filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.nearby-filters input,
+.nearby-filters select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 180px;
+}
+.nearby-filters button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+#nearbyMap {
+    width: 100%;
+    height: 480px;
+    border-radius: 14px;
+    margin-bottom: 28px;
+    z-index: 1;
+}
+.nearby-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+}
+.nearby-card {
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+}
+.nearby-card h3 {
+    margin: 0 0 8px;
+}
+.nearby-card p {
+    margin: 7px 0;
+    color: #555;
+}
+.nearby-empty {
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+</style>
+
+<div class="nearby-page">
+
+    <div class="nearby-heading">
+        <h1>Nearby Services</h1>
+        <p>Find verified local services on the map.</p>
+    </div>
+
+    <form method="GET" action="{{ url_for('nearby') }}" class="nearby-filters">
+        <input
+            type="text"
+            name="city"
+            placeholder="Enter city"
+            value="{{ city or '' }}"
+        >
+
+        <select name="category">
+            <option value="">All Categories</option>
+            {% for item in categories %}
+                <option
+                    value="{{ item.category_name }}"
+                    {% if selected_category == item.category_name %}selected{% endif %}
+                >
+                    {{ item.category_name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="nearbyMap"></div>
+
+    <h2>Available Services</h2>
+
+    {% if services %}
+        <div class="nearby-services">
+            {% for service in services %}
+                <div class="nearby-card">
+                    <h3>{{ service.service_name }}</h3>
+                    <p><strong>Category:</strong> {{ service.category }}</p>
+                    <p><strong>Business:</strong> {{ service.business_name }}</p>
+                    <p><strong>Price:</strong> ₹{{ service.price }}</p>
+                    <p><strong>Address:</strong> {{ service.address }}, {{ service.city }}</p>
+                    {% if service.description %}
+                        <p>{{ service.description }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="nearby-empty">
+            No mapped services found. Try another city or category.
+        </div>
+    {% endif %}
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script type="application/json" id="services-data">
+{{ services | tojson }}
+</script>
+
+<script>
+    const map = L.map("nearbyMap").setView([22.7196, 75.8577], 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const services = JSON.parse(
+        document.getElementById("services-data").textContent
+    );
+
+    const markers = [];
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[char]);
+    }
+
+    services.forEach(service => {
+        const lat = Number(service.latitude);
+        const lng = Number(service.longitude);
+
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+        const marker = L.marker([lat, lng]).addTo(map);
+
+        marker.bindPopup(`
+            <strong>${escapeHTML(service.service_name)}</strong><br>
+            ${escapeHTML(service.category)}<br>
+            Price: ₹${escapeHTML(service.price)}<br>
+            ${escapeHTML(service.address)}, ${escapeHTML(service.city)}
+        `);
+
+        markers.push(marker);
+    });
+
+    if (markers.length > 0) {
+        map.fitBounds(
+            L.featureGroup(markers).getBounds(),
+            { padding: [40, 40] }
+        );
+    }
+</script>
+
+{% endblock %}

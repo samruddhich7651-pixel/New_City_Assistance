@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant | CityAssist</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .ai-assistant-page {
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: #f5f7fc;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .ai-chat-header {
+            min-height: 75px;
+            padding: 12px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border-bottom: 1px solid #e8edf5;
+            flex-shrink: 0;
+        }
+
+        .ai-brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .ai-brand-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            background: #eaf1ff;
+            color: #2469dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .ai-brand h2 {
+            margin: 0;
+            font-size: 19px;
+            color: #17243b;
+        }
+
+        .ai-brand p {
+            margin: 5px 0 0;
+            color: #7b879a;
+            font-size: 13px;
+        }
+
+        .ai-menu-btn {
+            border: none;
+            background: transparent;
+            color: #526078;
+            font-size: 19px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .ai-chat-body {
+            flex: 1;
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 28px 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            width: 100%;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 17px;
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .user-message .message-bubble {
+            background: #2469dc;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .assistant-avatar {
+            width: 37px;
+            height: 37px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #e5eeff;
+            color: #2469dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .assistant-bubble {
+            background: white;
+            color: #26344a;
+            border: 1px solid #e9edf4;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 12px rgba(20, 40, 80, 0.04);
+        }
+
+        .ai-welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: auto;
+            padding: 25px 15px;
+            color: #26344a;
+        }
+
+        .ai-welcome-icon {
+            width: 68px;
+            height: 68px;
+            background: #e5eeff;
+            color: #2469dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            font-size: 29px;
+            margin-bottom: 18px;
+        }
+
+        .ai-welcome h3 {
+            margin: 0 0 9px;
+            font-size: 23px;
+        }
+
+        .ai-welcome p {
+            max-width: 430px;
+            color: #7b879a;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .ai-chat-input {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #e5eaf2;
+            border-radius: 15px;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            color: #26344a;
+        }
+
+        .ai-chat-input button {
+            border: none;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .ai-mic-btn {
+            background: transparent;
+            color: #8793a7;
+            font-size: 18px;
+            padding: 8px;
+        }
+
+        .ai-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #2469dc;
+            color: white;
+            font-size: 17px;
+        }
+
+        .ai-bottom-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 35px;
+            padding: 13px 15px;
+            background: white;
+            border-top: 1px solid #e8edf5;
+            flex-shrink: 0;
+        }
+
+        .ai-nav-item {
+            min-width: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #8994a7;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .ai-nav-item i {
+            font-size: 19px;
+        }
+
+        .ai-nav-item.active {
+            color: #2469dc;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .ai-chat-header {
+                padding: 12px 17px;
+            }
+
+            .ai-chat-body {
+                padding: 20px 13px;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+                font-size: 13px;
+                padding: 12px 14px;
+            }
+
+            .ai-chat-input {
+                width: calc(100% - 20px);
+                padding: 10px 12px;
+                margin-bottom: 5px;
+            }
+
+            .ai-bottom-nav {
+                justify-content: space-around;
+                gap: 0;
+                padding: 12px 5px;
+            }
+
+            .ai-nav-item {
+                min-width: 0;
+                font-size: 10px;
+            }
+
+            .ai-nav-item i {
+                font-size: 18px;
+            }
+
+            .ai-welcome h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="ai-assistant-page">
+
+    <header class="ai-chat-header">
+        <div class="ai-brand">
+            <div class="ai-brand-icon">
+                <i class="fas fa-globe-asia"></i>
+            </div>
+
+            <div>
+                <h2>CityAssist AI</h2>
+                <p>Your smart local assistant</p>
+            </div>
+        </div>
+
+        <button class="ai-menu-btn" type="button" aria-label="More options">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+    </header>
+
+    <main class="ai-chat-body" id="chatBody">
+
+        <div class="ai-welcome">
+            <div class="ai-welcome-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+
+            <h3>Welcome to CityAssist AI!</h3>
+
+            <p>
+                Tell me what you need in your city.
+                I can help you find local services and useful information.
+            </p>
+        </div>
+
+    </main>
+
+    <form class="ai-chat-input" id="aiChatForm">
+
+        <input
+            type="text"
+            id="aiMessageInput"
+            placeholder="Ask me anything about your city..."
+            autocomplete="off"
+            required
+        >
+
+        <button type="button" class="ai-mic-btn" aria-label="Voice input">
+            <i class="fas fa-microphone"></i>
+        </button>
+
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+
+    </form>
+
+    <nav class="ai-bottom-nav">
+
+        <a href="/" class="ai-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+
+        <a href="/explore" class="ai-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+
+        <a href="/ai-assistant" class="ai-nav-item active">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+
+        <a href="/favourites" class="ai-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+
+        <a href="/profile" class="ai-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+    </nav>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

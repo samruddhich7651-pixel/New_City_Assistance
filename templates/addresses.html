@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Addresses | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-page">
+    <main class="profile-content">
+
+        <div class="address-page-header">
+            <a href="{{ url_for('profile') }}" class="address-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h2>My Addresses</h2>
+                <p>Manage your saved locations</p>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="flash-message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="profile-menu">
+            <details class="profile-menu-item">
+                <summary>
+                    <span><i class="fas fa-plus"></i> Add New Address</span>
+                    <i class="fas fa-chevron-down"></i>
+                </summary>
+
+                <form method="POST" class="profile-edit-form">
+
+                    <label>Address Name</label>
+                    <input type="text" name="address_name"
+                           placeholder="Home, College, Office" required>
+
+                    <label>Full Address</label>
+                    <textarea name="full_address"
+                              placeholder="Enter your complete address"
+                              required></textarea>
+
+                    <label>City</label>
+                    <input type="text" name="city" required>
+
+                    <label>PIN Code</label>
+                    <input type="text" name="pincode"
+                           maxlength="10" placeholder="Enter PIN code">
+
+                    <button type="submit">
+                        <i class="fas fa-save"></i> Save Address
+                    </button>
+                </form>
+            </details>
+        </section>
+
+        <div class="saved-address-heading">
+            <h3>Saved Addresses</h3>
+        </div>
+
+        {% if addresses %}
+            <div class="saved-address-list">
+                {% for address in addresses %}
+                    <section class="saved-address-card">
+                        <div class="saved-address-icon">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+
+                        <div class="saved-address-info">
+                            <h3>{{ address.address_name }}</h3>
+                            <p>{{ address.full_address }}</p>
+                            <p>{{ address.city }}{% if address.pincode %} - {{ address.pincode }}{% endif %}</p>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="address-empty-state">
+                <i class="fas fa-map-location-dot"></i>
+                <h3>No Addresses Saved</h3>
+                <p>Add your home, college or office address here.</p>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <nav class="profile-bottom-nav">
+        <a href="/" class="profile-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/explore" class="profile-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/ai-assistant" class="profile-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+        <a href="/favourites" class="profile-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="/profile" class="profile-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

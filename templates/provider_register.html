@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Registration | CityAssist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<section class="provider-register-page">
+<div class="provider-register-card">
+
+    <a href="{{ url_for('home') }}" class="provider-logo">
+        City<span>Assist.</span>
+    </a>
+
+    <div class="provider-heading">
+        <h1>Register Your Business</h1>
+        <p>Join CityAssist and connect with people in your city.</p>
+    </div>
+
+    <div class="provider-progress">
+        <div class="provider-step active" id="progress1">
+            <div class="step-number">1</div>
+            <span>Business Details</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="provider-step" id="progress2">
+            <div class="step-number">2</div>
+            <span>Owner Details</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="provider-step" id="progress3">
+            <div class="step-number">3</div>
+            <span>Complete</span>
+        </div>
+    </div>
+
+    <form id="providerMultiStepForm"
+          method="POST"
+          action="{{ url_for('provider_register') }}">
+
+        <!-- STEP 1 -->
+        <div class="provider-form-step" id="step1">
+
+            <div class="provider-form-group">
+                <label>Business Name</label>
+                <input type="text" name="business_name" id="business_name"
+                       placeholder="Enter your business name" required>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Service Category</label>
+                <select name="category" id="category" required>
+                    <option value="">Select service category</option>
+                    <option value="Accommodation">Accommodation</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Food & Grocery">Food & Grocery</option>
+                    <option value="Home Services">Home Services</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Phone Number</label>
+                <input type="tel" name="mobile" id="mobile"
+                       placeholder="Enter 10-digit phone number"
+                       maxlength="10" required>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" id="email"
+                       placeholder="Enter your email address" required>
+            </div>
+
+            <p class="provider-form-message" id="message1"></p>
+
+            <button type="button" class="provider-next-btn" onclick="nextStep(1)">
+                Next <span>→</span>
+            </button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="provider-form-step" id="step2" style="display:none;">
+
+            <div class="provider-form-group">
+                <label>Owner Name</label>
+                <input type="text" name="owner_name" id="owner_name"
+                       placeholder="Enter owner's full name" required>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Business Address</label>
+                <input type="text" name="address" id="address"
+                       placeholder="Enter complete address" required>
+            </div>
+
+            <div class="provider-form-group">
+                <label>City</label>
+                <input type="text" name="city" id="city"
+                       placeholder="Enter your city" required>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Business Description</label>
+                <textarea name="description" id="description"
+                          placeholder="Describe your business and services"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="provider-form-group">
+                <label>Create Password</label>
+                <input type="password" name="password" id="provider_password"
+                       placeholder="Minimum 8 characters" required>
+            </div>
+
+            <p class="provider-form-message" id="message2"></p>
+
+            <div class="provider-step-buttons">
+                <button type="button" class="provider-next-btn"
+                        onclick="previousStep(2)">← Back</button>
+
+                <button type="button" class="provider-next-btn"
+                        onclick="nextStep(2)">Next →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="provider-form-step" id="step3" style="display:none;">
+
+            <h2>Review Your Details</h2>
+            <p>Please check your information before submitting.</p>
+
+            <div class="provider-review-details">
+                <p><strong>Business:</strong> <span id="review_business"></span></p>
+                <p><strong>Category:</strong> <span id="review_category"></span></p>
+                <p><strong>Phone:</strong> <span id="review_mobile"></span></p>
+                <p><strong>Email:</strong> <span id="review_email"></span></p>
+                <p><strong>Owner:</strong> <span id="review_owner"></span></p>
+                <p><strong>Address:</strong> <span id="review_address"></span></p>
+                <p><strong>City:</strong> <span id="review_city"></span></p>
+            </div>
+
+            <p class="provider-form-message" id="message3"></p>
+
+            <div class="provider-step-buttons">
+                <button type="button" class="provider-next-btn"
+                        onclick="previousStep(3)">← Back</button>
+
+                <button type="submit" class="provider-next-btn">
+                    Complete Registration ✓
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="provider-login-link">
+        Already have an account?
+        <a href="{{ url_for('login', role='provider') }}">Login</a>
+    </div>
+
+</div>
+</section>
+
+<script>
+function showStep(step) {
+    document.querySelectorAll(".provider-form-step").forEach(function(element) {
+        element.style.display = "none";
+    });
+
+    document.getElementById("step" + step).style.display = "block";
+
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById("progress" + i).classList.toggle("active", i <= step);
+    }
+}
+
+function nextStep(current) {
+    const message = document.getElementById("message" + current);
+    message.textContent = "";
+    message.style.color = "#dc2626";
+
+    if (current === 1) {
+        const business = document.getElementById("business_name");
+        const category = document.getElementById("category");
+        const mobile = document.getElementById("mobile");
+        const email = document.getElementById("email");
+
+        if (!business.value.trim() || !category.value ||
+            !mobile.value.trim() || !email.value.trim()) {
+            message.textContent = "Please fill all business details.";
+            return;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(mobile.value.trim())) {
+            message.textContent = "Please enter a valid 10-digit phone number.";
+            mobile.focus();
+            return;
+        }
+
+        if (!email.checkValidity()) {
+            message.textContent = "Please enter a valid email address.";
+            email.focus();
+            return;
+        }
+    }
+
+    if (current === 2) {
+        const owner = document.getElementById("owner_name");
+        const address = document.getElementById("address");
+        const city = document.getElementById("city");
+        const password = document.getElementById("provider_password");
+
+        if (!owner.value.trim() || !address.value.trim() ||
+            !city.value.trim() || !password.value) {
+            message.textContent = "Please fill all required details.";
+            return;
+        }
+
+        if (password.value.length < 8) {
+            message.textContent = "Password must contain at least 8 characters.";
+            password.focus();
+            return;
+        }
+
+        document.getElementById("review_business").textContent =
+            document.getElementById("business_name").value;
+        document.getElementById("review_category").textContent =
+            document.getElementById("category").value;
+        document.getElementById("review_mobile").textContent =
+            document.getElementById("mobile").value;
+        document.getElementById("review_email").textContent =
+            document.getElementById("email").value;
+        document.getElementById("review_owner").textContent = owner.value;
+        document.getElementById("review_address").textContent = address.value;
+        document.getElementById("review_city").textContent = city.value;
+    }
+
+    showStep(current + 1);
+}
+
+function previousStep(current) {
+    showStep(current - 1);
+}
+</script>
+
+</body>
+</html>

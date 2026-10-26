@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-page">
+    <main class="profile-content">
+
+        <section class="profile-user-card">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div class="profile-user-info">
+                <h2>{{ user.first_name }} {{ user.last_name or '' }}</h2>
+                <p><i class="fas fa-phone"></i> {{ user.mobile or 'Add phone number' }}</p>
+                <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                <p><i class="fas fa-location-dot"></i> {{ user.city or 'Add city' }}</p>
+            </div>
+        </section>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="flash-message">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="profile-menu">
+            <details class="profile-menu-item">
+                <summary>
+                    <span>Edit Profile</span>
+                    <i class="fas fa-chevron-down"></i>
+                </summary>
+
+                <form method="POST" action="{{ url_for('profile') }}" class="profile-edit-form">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" required>
+
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" value="{{ user.last_name or '' }}">
+
+                    <label>Email</label>
+                    <input type="email" value="{{ user.email }}" disabled>
+
+                    <label>Mobile Number</label>
+                    <input type="tel" name="mobile" value="{{ user.mobile or '' }}">
+
+                    <label>City</label>
+                    <input type="text" name="city" value="{{ user.city or '' }}">
+
+                    <button type="submit">Save Changes</button>
+                </form>
+            </details>
+
+            <a href="{{ url_for('my_addresses') }}" class="profile-menu-item">
+    <span>
+        <i class="fas fa-map-marker-alt"></i>
+        My Addresses
+    </span>
+    <i class="fas fa-chevron-right"></i>
+</a>
+
+          <a href="{{ url_for('my_reviews') }}" class="profile-menu-item">
+    <span>
+        <i class="fas fa-star"></i>
+        My Reviews
+    </span>
+    <i class="fas fa-chevron-right"></i>
+</a>
+
+            <a href="{{ url_for('search_history') }}" class="profile-menu-item">
+    <span>
+        <i class="fas fa-clock-rotate-left"></i>
+        Search History
+    </span>
+    <i class="fas fa-chevron-right"></i>
+</a>
+
+           <a href="{{ url_for('settings') }}" class="profile-menu-item">
+    <span>
+        <i class="fas fa-cog"></i>
+        Settings
+    </span>
+    <i class="fas fa-chevron-right"></i>
+</a>
+
+
+        
+        </section>
+    </main>
+
+    <nav class="profile-bottom-nav">
+        <a href="/" class="profile-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/explore" class="profile-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/ai-assistant" class="profile-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+        <a href="/favourites" class="profile-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="/profile" class="profile-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

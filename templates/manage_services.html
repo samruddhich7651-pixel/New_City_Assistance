@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Services | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body class="my-services-page">
+
+<div class="ms-layout">
+
+    <aside class="ms-sidebar">
+        <a href="/" class="ms-brand">
+            <span>🌐</span>
+            <div><strong>NewCity</strong><small>Provider</small></div>
+        </a>
+
+        <nav>
+            <a href="{{ url_for('provider_dashboard') }}">▦ Dashboard</a>
+            <a href="{{ url_for('manage_services') }}" class="active">▤ My Services</a>
+            <a href="#add-service" id="sidebarAddService">＋ Add Service</a>
+            <a href="{{ url_for('provider_bookings') }}">▣ Bookings / Leads</a>
+            <a href="{{ url_for('provider_reviews') }}">☆ Reviews</a>
+            <a href="{{ url_for('provider_earnings') }}">₹ Earnings</a>
+            <a href="{{ url_for('provider_profile') }}">♙ Profile</a>
+            <a href="{{ url_for('logout') }}" class="ms-logout">↪ Logout</a>
+        </nav>
+    </aside>
+
+    <main class="ms-main">
+
+        <header class="ms-header">
+            <div>
+                <p>BUSINESS MANAGEMENT</p>
+                <h1>My Services</h1>
+            </div>
+
+            <button type="button" class="ms-add-button" id="openAddForm">
+                + Add New Service
+            </button>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="ms-section">
+
+            <div class="ms-section-heading">
+                <div>
+                    <h2>My Services</h2>
+                    <p>Manage your listed services and their status.</p>
+                </div>
+                <span class="ms-count">{{ services|length }} Services</span>
+            </div>
+
+            {% if services %}
+                <div class="ms-service-list">
+                    {% for service in services %}
+                    <article class="ms-service-card">
+
+                        <div class="ms-service-icon">
+                            {% if 'PG' in service[2] or 'Accommodation' in service[2] %}
+                                🏠
+                            {% elif 'Food' in service[2] or 'Tiffin' in service[2] %}
+                                🍱
+                            {% elif 'Medical' in service[2] %}
+                                🏥
+                            {% elif 'Grocery' in service[2] %}
+                                🛒
+                            {% elif 'Repair' in service[2] %}
+                                🔧
+                            {% elif 'Laundry' in service[2] %}
+                                🧺
+                            {% elif 'Transport' in service[2] %}
+                                🚗
+                            {% else %}
+                                🏪
+                            {% endif %}
+                        </div>
+
+                        <div class="ms-service-info">
+                            <div class="ms-title-row">
+                                <h3>{{ service[1] }}</h3>
+
+                                {% if service[6] %}
+                                    <span class="ms-status active">Active</span>
+                                {% else %}
+                                    <span class="ms-status inactive">Inactive</span>
+                                {% endif %}
+                            </div>
+
+                            <p class="ms-category">{{ service[2] }}</p>
+
+                            <p class="ms-price">
+                                {% if service[3] is not none %}
+                                    ₹{{ service[3] }}
+                                {% else %}
+                                    Contact for price
+                                {% endif %}
+                            </p>
+
+                            <div class="ms-service-actions">
+    <a href="{{ url_for('edit_service', service_id=service[0]) }}"
+       class="ms-edit-btn">Edit</a>
+
+    <form method="POST"
+          action="{{ url_for('delete_service', service_id=service[0]) }}"
+          onsubmit="return confirm('Are you sure you want to delete this service?');">
+        <button type="submit" class="ms-delete-btn">Delete</button>
+    </form>
+</div>
+
+                            <div class="ms-card-bottom">
+                                {% if service[5] %}
+                                    <span class="ms-verified">✓ Verified</span>
+                                {% else %}
+                                    <span class="ms-pending">◷ Pending Verification</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="ms-empty">
+                    <div>🏪</div>
+                    <h3>No services added yet</h3>
+                    <p>Your submitted services will appear here.</p>
+                    <button type="button" class="ms-add-button" id="emptyAddButton">
+                        + Add Your First Service
+                    </button>
+                </div>
+            {% endif %}
+
+        </section>
+
+        <section class="ms-section ms-add-section" id="add-service">
+
+            <div class="ms-section-heading">
+                <div>
+                    <h2>Add New Service</h2>
+                    <p>Enter the details of your service listing.</p>
+                </div>
+
+                <button type="button" class="ms-close-button" id="closeAddForm">
+                    ✕ Close
+                </button>
+            </div>
+
+            <form action="{{ url_for('manage_services') }}"
+                  method="POST" class="ms-form">
+
+                <div class="ms-form-group">
+                    <label for="service_name">Service Name *</label>
+                    <input type="text" id="service_name" name="service_name"
+                           placeholder="e.g. Comfortable Girls PG" required>
+                </div>
+
+                <div class="ms-form-row">
+                    <div class="ms-form-group">
+                        <label for="category">Service Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select category</option>
+                            <option value="PG & Accommodation">PG & Accommodation</option>
+                            <option value="Food & Tiffin">Food & Tiffin</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Repair Services">Repair Services</option>
+                            <option value="Laundry">Laundry</option>
+                            <option value="Transport">Transport</option>
+                            <option value="SIM & Internet">SIM & Internet</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="ms-form-group">
+                        <label for="price">Price (₹)</label>
+                        <input type="number" id="price" name="price"
+                               min="0" step="0.01" placeholder="Enter price">
+                    </div>
+                </div>
+
+                <div class="ms-form-group">
+                    <label for="address">Full Address *</label>
+                    <input type="text" id="address" name="address"
+                           placeholder="Enter complete address" required>
+                </div>
+
+                <div class="ms-form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" name="city"
+                           placeholder="Enter city" required>
+                </div>
+
+                <div class="ms-form-group">
+                    <label>Select Service Location on Map</label>
+
+                    <p style="color:#64748b;font-size:13px;margin:5px 0 12px;">
+                        Search your area or click anywhere on the map to select your service location.
+                    </p>
+
+                    <input type="text" id="mapSearch"
+                           placeholder="Search location or area"
+                           style="width:100%;padding:12px;margin-bottom:10px;">
+
+                    <button type="button" id="searchMapLocation"
+                            class="ms-add-button">
+                        Search Location
+                    </button>
+
+                    <div id="serviceMap"
+                         style="height:350px;width:100%;margin-top:15px;border-radius:12px;z-index:1;">
+                    </div>
+
+                    <p id="selectedLocation"
+                       style="font-size:13px;color:#64748b;margin-top:10px;">
+                        No map location selected yet.
+                    </p>
+
+                    <input type="hidden" name="latitude" id="latitude">
+                    <input type="hidden" name="longitude" id="longitude">
+                </div>
+
+                <div class="ms-form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" name="contact"
+                           placeholder="Enter contact number">
+                </div>
+
+                <div class="ms-form-group">
+                    <label for="description">Service Description *</label>
+                    <textarea id="description" name="description" rows="4"
+                              placeholder="Describe your service..." required></textarea>
+                </div>
+
+                <button type="submit" class="ms-submit-button">
+                    Submit for Verification →
+                </button>
+
+            </form>
+        </section>
+
+    </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const formSection = document.getElementById("add-service");
+
+    let map = null;
+    let marker = null;
+
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+    const selectedLocation = document.getElementById("selectedLocation");
+
+    function selectLocation(lat, lng) {
+        latitudeInput.value = lat.toFixed(7);
+        longitudeInput.value = lng.toFixed(7);
+
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+
+        selectedLocation.textContent =
+            "Selected coordinates: " +
+            lat.toFixed(5) + ", " + lng.toFixed(5);
+    }
+
+    function initializeMap() {
+        if (map) {
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 200);
+            return;
+        }
+
+        map = L.map("serviceMap").setView([22.7196, 75.8577], 12);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        map.on("click", function (event) {
+            selectLocation(event.latlng.lat, event.latlng.lng);
+        });
+
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 300);
+    }
+
+    function openForm() {
+        formSection.style.display = "block";
+
+        setTimeout(function () {
+            initializeMap();
+            formSection.scrollIntoView({ behavior: "smooth" });
+        }, 200);
+    }
+
+    document.getElementById("openAddForm").addEventListener("click", openForm);
+
+    if (new URLSearchParams(window.location.search).get("add") === "1") {
+        openForm();
+    }
+
+    document.getElementById("sidebarAddService").addEventListener("click", function (event) {
+        event.preventDefault();
+        openForm();
+    });
+
+    const emptyButton = document.getElementById("emptyAddButton");
+
+    if (emptyButton) {
+        emptyButton.addEventListener("click", openForm);
+    }
+
+    document.getElementById("closeAddForm").addEventListener("click", function () {
+        formSection.style.display = "none";
+    });
+
+    document.getElementById("searchMapLocation").addEventListener("click", async function () {
+
+        const locationInput = document.getElementById("mapSearch").value.trim();
+        const cityInput = document.getElementById("city").value.trim();
+
+        if (!locationInput) {
+            alert("Please enter an area or location.");
+            return;
+        }
+
+        if (!map) {
+            initializeMap();
+        }
+
+        const query = [locationInput, cityInput, "India"]
+            .filter(Boolean)
+            .join(", ");
+
+        const button = this;
+        button.disabled = true;
+        button.textContent = "Searching...";
+
+        try {
+            const url =
+                "https://nominatim.openstreetmap.org/search?format=json&limit=5&q=" +
+                encodeURIComponent(query);
+
+            const response = await fetch(url, {
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Location search service unavailable");
+            }
+
+            const results = await response.json();
+
+            if (!results || results.length === 0) {
+                alert("Location not found. Try another area or select directly on the map.");
+                return;
+            }
+
+            const lat = parseFloat(results[0].lat);
+            const lng = parseFloat(results[0].lon);
+
+            map.setView([lat, lng], 16);
+            selectLocation(lat, lng);
+
+        } catch (error) {
+            console.error("Location search error:", error);
+            alert("Location search failed. Check your internet connection or select directly on the map.");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Search Location";
+        }
+    });
+
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}?v=4"></script>
+
+</body>
+</html>

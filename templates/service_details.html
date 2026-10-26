@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details | CityAssist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="service-details-body">
+
+    <main class="service-details-container">
+
+        <div class="details-topbar">
+            <a href="{{ url_for('explore', city=service.city) }}" class="details-back">
+                ← <span>Back</span>
+            </a>
+
+            <div class="details-actions">
+
+                <button
+                    type="button"
+                    onclick="if (navigator.share) { navigator.share({title: '{{ service.service_name|e }}', url: location.href}); } else { alert('Sharing is not supported on this device.'); }"
+                    aria-label="Share">
+                    ↗
+                </button>
+
+                <!-- Working Add/Remove Favourite Button -->
+               <!-- Add/Remove Favourite Button -->
+<form action="{{ url_for('toggle_favourite', service_id=service.id) }}" method="POST">
+    <button
+        type="submit"
+        class="favourite-btn {% if is_favourite %}active{% endif %}"
+        aria-label="{% if is_favourite %}Remove from Favourites{% else %}Add to Favourites{% endif %}"
+        title="{% if is_favourite %}Remove from Favourites{% else %}Add to Favourites{% endif %}">
+        {% if is_favourite %}
+            <span>♥</span>
+        {% else %}
+            <span>♡</span>
+        {% endif %}
+    </button>
+</form>
+
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="details-image">
+            <img
+                src="{{ url_for('static', filename='images/default-service.jpg') }}"
+                alt="{{ service.service_name }}">
+        </div>
+
+        <section class="details-main-info">
+
+            <div class="details-title-row">
+                <h1>{{ service.service_name }}</h1>
+
+                {% if service.is_verified %}
+                    <span class="verified-badge">✓ Verified</span>
+                {% endif %}
+            </div>
+
+            <p class="details-category">{{ service.category }}</p>
+
+            <p class="details-address">
+                📍 {{ service.address }}{% if service.city %}, {{ service.city }}{% endif %}
+            </p>
+
+            {% if service.business_name %}
+                <p>Provider: {{ service.business_name }}</p>
+            {% endif %}
+
+        </section>
+
+        <section class="details-price-box">
+            <div>
+                <strong>
+                    {% if service.price is not none %}
+                        ₹{{ service.price }}
+                    {% else %}
+                        Price on request
+                    {% endif %}
+                </strong>
+            </div>
+        </section>
+
+        <section class="details-section details-about">
+            <h2>About</h2>
+
+            <p>
+                {{ service.description if service.description else 'No description available.' }}
+            </p>
+        </section>
+
+        <section class="details-section">
+            <h2>Contact Information</h2>
+            <p>{{ service.contact if service.contact else 'Contact number not available.' }}</p>
+        </section>
+
+
+        <section class="details-section request-service-section">
+            <h2>Send Service Request</h2>
+            <p>Share your contact details with the provider to request this service.</p>
+            <form method="POST" action="{{ url_for('send_service_request', service_id=service.id) }}">
+                <label for="customer_name">Your Name *</label>
+                <input id="customer_name" name="customer_name" type="text" value="{{ session.get('user_name', '') }}" required>
+                <label for="customer_mobile">Mobile Number *</label>
+                <input id="customer_mobile" name="customer_mobile" type="tel" value="{{ session.get('user_mobile', '') }}" required>
+                <label for="message">Requirement (optional)</label>
+                <textarea id="message" name="message" rows="3" placeholder="Tell the provider what you need..."></textarea>
+                <button type="submit" class="details-contact-btn">Send Request</button>
+            </form>
+        </section>
+
+        <div class="details-contact-actions">
+
+            {% if service.contact %}
+                <a href="tel:{{ service.contact }}" class="details-contact-btn">
+                    <span>☎</span> Call
+                </a>
+
+                <a
+                    href="https://wa.me/{{ service.contact|replace(' ', '')|replace('+', '')|replace('-', '') }}"
+                    target="_blank"
+                    rel="noopener"
+                    class="details-contact-btn">
+                    <span>▣</span> WhatsApp
+                </a>
+            {% endif %}
+
+            <a
+                href="https://www.google.com/maps/search/?api=1&query={{ (service.address ~ ', ' ~ service.city)|urlencode }}"
+                target="_blank"
+                rel="noopener"
+                class="details-contact-btn">
+                <span>⌖</span> Directions
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

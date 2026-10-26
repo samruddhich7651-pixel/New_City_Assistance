@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Dashboard - NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="provider-dashboard-page">
+
+    <div class="provider-layout">
+
+        <aside class="provider-sidebar">
+
+            <a href="/" class="provider-brand">
+                <span>🌐</span>
+                <div>
+                    <strong>NewCity</strong>
+                    <small>Provider</small>
+                </div>
+            </a>
+
+            <nav class="provider-sidebar-nav">
+
+                <a href="{{ url_for('provider_dashboard') }}" class="provider-nav-link active">
+                    <span>▦</span> Dashboard
+                </a>
+
+                <a href="{{ url_for('manage_services') }}" class="provider-nav-link">
+                    <span>▤</span> My Services
+                </a>
+
+                <a href="{{ url_for('manage_services') }}?add=1" class="provider-nav-link">
+                    <span>＋</span> Add Service
+                </a>
+
+                <a href="{{ url_for('provider_bookings') }}" class="provider-nav-link">
+                    <span>▣</span> Bookings / Leads
+                </a>
+
+                <a href="{{ url_for('provider_reviews') }}" class="provider-nav-link">
+                    <span>☆</span> Reviews
+                </a>
+
+                <a href="{{ url_for('provider_earnings') }}" class="provider-nav-link">
+                    <span>₹</span> Earnings
+                </a>
+
+                <a href="{{ url_for('provider_profile') }}" class="provider-nav-link">
+                    <span>♙</span> Profile
+                </a>
+
+                <a href="{{ url_for('logout') }}" class="provider-nav-link provider-logout">
+                    <span>↪</span> Logout
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <main class="provider-dashboard-main">
+
+            <header class="provider-topbar">
+                <div>
+                    <p>NEWCITY PROVIDER PANEL</p>
+                    <h1>Dashboard</h1>
+                </div>
+
+                <div class="provider-account">
+                    <span>👤</span>
+                    <strong>{{ session.get('provider_name', 'Service Provider') }}</strong>
+                </div>
+            </header>
+
+            <section class="provider-welcome">
+                <div>
+                    <h2>Welcome, {{ session.get('provider_name', 'Service Provider') }}!</h2>
+                    <p>Manage your business and service listings.</p>
+                </div>
+
+                <a href="{{ url_for('manage_services') }}" class="provider-add-button">
+                    + Add New Service
+                </a>
+            </section>
+
+            <section class="provider-stats-grid">
+
+                <article class="provider-stat-card">
+                    <div class="provider-stat-icon">▤</div>
+                    <p>Total Services</p>
+                    <h2>{{ stats[0] }}</h2>
+                </article>
+
+                <article class="provider-stat-card">
+                    <div class="provider-stat-icon">✓</div>
+                    <p>Active Listings</p>
+                    <h2>{{ stats[1] }}</h2>
+                </article>
+
+                <article class="provider-stat-card">
+                    <div class="provider-stat-icon">◈</div>
+                    <p>Approved Services</p>
+                    <h2>{{ stats[2] }}</h2>
+                </article>
+
+                <article class="provider-stat-card">
+                    <div class="provider-stat-icon">●</div>
+                    <p>Provider Status</p>
+                    <h2 class="provider-status">
+                        {{ 'Verified' if provider_verified else 'Pending' }}
+                    </h2>
+                </article>
+
+            </section>
+
+            <section class="provider-content-section">
+
+                <div class="provider-section-heading">
+                    <div>
+                        <h2>Manage Your Services</h2>
+                        <p>Manage your submitted business listings.</p>
+                    </div>
+
+                    <a href="{{ url_for('manage_services') }}">View All →</a>
+                </div>
+
+                <div class="provider-action-list">
+
+                    <a href="{{ url_for('manage_services') }}" class="provider-action-card">
+                        <span class="provider-action-icon">＋</span>
+                        <div>
+                            <h3>Add New Service</h3>
+                            <p>Create a new local service listing.</p>
+                        </div>
+                        <span class="provider-arrow">›</span>
+                    </a>
+
+                    <a href="{{ url_for('manage_services') }}" class="provider-action-card">
+                        <span class="provider-action-icon">▤</span>
+                        <div>
+                            <h3>My Service Listings</h3>
+                            <p>View and manage your submitted services.</p>
+                        </div>
+                        <span class="provider-arrow">›</span>
+                    </a>
+
+                </div>
+
+            </section>
+
+            <section class="provider-verification-notice">
+                <span>ⓘ</span>
+                <div>
+                    <h3>Verification Information</h3>
+                    <p>
+                        Your provider status is
+                        <strong>{{ 'Verified' if provider_verified else 'Pending Verification' }}</strong>.
+                        New services require admin approval before becoming visible to users.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

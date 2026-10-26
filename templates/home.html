@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityAssist - Your New City Companion</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span>✦</span> NewCity
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/explore">Explore</a>
+            <a href="/ai-assistant">AI Assistant</a>
+            <a href="/emergency">Emergency</a>
+        </div>
+
+       <a href="{{ url_for('choose_role') }}" class="login-btn">Login</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <div class="hero-content">
+            <h1>Nayi City, Nayi Shuruaat</h1>
+            <p>
+                Find trusted local services and everything you need,
+                all in one place.
+            </p>
+        </div>
+
+        <!-- Search Box -->
+        <!-- Search Box -->
+<form class="search-box" method="GET" action="{{ url_for('explore') }}">
+
+    <div class="location-field">
+        <label>Where are you?</label>
+        <div class="input-wrapper">
+            <span>📍</span>
+            <input
+                type="text"
+                name="city"
+                placeholder="Enter your city"
+                required
+            >
+        </div>
+    </div>
+
+    <div class="service-field">
+        <label>What do you need?</label>
+
+        <div class="search-input">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search for PG, Tiffin, Electrician..."
+            >
+
+            <button type="submit" class="search-btn">
+                🔍 Search
+            </button>
+        </div>
+    </div>
+
+</form>
+    </section>
+
+    <!-- Emergency Section -->
+    <section class="emergency-section">
+
+        <div class="emergency-content">
+            <h3>Emergency? Need Help Now?</h3>
+            <p>One tap access to essential emergency services.</p>
+        </div>
+
+        <a href="/emergency" class="emergency-btn">
+            🚨 Emergency
+        </a>
+
+    </section>
+
+    <!-- Trust Section -->
+    <footer class="trust-footer">
+
+        <div class="trust-item">
+            <span>◉</span> Trusted
+        </div>
+
+        <div class="trust-item">
+            <span>✚</span> Verified
+        </div>
+
+        <div class="trust-item">
+            <span>♧</span> Safe & Secure
+        </div>
+
+    </footer>
+
+</body>
+</html>

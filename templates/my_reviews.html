@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reviews | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-page">
+    <main class="profile-content">
+
+        <div class="address-page-header">
+            <a href="{{ url_for('profile') }}" class="address-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h2>My Reviews</h2>
+                <p>Your ratings and feedback</p>
+            </div>
+        </div>
+
+        {% if reviews %}
+            <div class="saved-address-list">
+                {% for review in reviews %}
+                    <section class="saved-address-card">
+                        <div class="saved-address-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+
+                        <div class="saved-address-info">
+                            <h3>{{ review.service_name }}</h3>
+
+                            <p>{{ review.category }} · {{ review.city }}</p>
+
+                            <div class="review-stars">
+                                {% for i in range(review.rating) %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                                {% for i in range(5 - review.rating) %}
+                                    <i class="far fa-star"></i>
+                                {% endfor %}
+                            </div>
+
+                            <p>{{ review.comment or 'No written feedback.' }}</p>
+
+                            <small>{{ review.created_at.strftime('%d %b %Y') }}</small>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="address-empty-state">
+                <i class="fas fa-star"></i>
+                <h3>No Reviews Yet</h3>
+                <p>Your submitted reviews will appear here.</p>
+                <a href="{{ url_for('explore') }}">Explore Services</a>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <nav class="profile-bottom-nav">
+        <a href="/" class="profile-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/explore" class="profile-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/ai-assistant" class="profile-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+        <a href="/favourites" class="profile-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="/profile" class="profile-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

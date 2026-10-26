@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin {{ page }} | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .admin-manage {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .manage-card {
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            margin: 18px 0;
+            box-shadow: 0 4px 18px #1725540d;
+        }
+
+        .manage-search {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .manage-search input,
+        .manage-card input,
+        .manage-card select {
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            min-width: 180px;
+            outline: none;
+        }
+
+        .manage-search input:focus,
+        .manage-card input:focus,
+        .manage-card select:focus {
+            border-color: #2563eb;
+        }
+
+        .manage-btn {
+            padding: 9px 14px;
+            border: 0;
+            border-radius: 7px;
+            background: #1d4ed8;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: .2s;
+            white-space: nowrap;
+        }
+
+        .manage-btn:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        .manage-btn.off {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .manage-btn.verify {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .manage-btn.reject {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .manage-btn.small {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .manage-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        .manage-table th,
+        .manage-table td {
+            text-align: left;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .manage-table th {
+            color: #475569;
+            background: #f8fafc;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .manage-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .manage-status {
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-green {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-yellow {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .status-red {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .manage-flash {
+            padding: 12px 15px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-radius: 7px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .manage-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .manage-nav a {
+            padding: 8px 13px;
+            background: #eaf0ff;
+            border-radius: 7px;
+            text-decoration: none;
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .manage-nav a:hover {
+            background: #dbeafe;
+        }
+
+        .manage-empty {
+            padding: 25px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .action-group form {
+            margin: 0;
+        }
+
+        @media(max-width: 768px) {
+            .manage-card {
+                padding: 14px;
+            }
+
+            .manage-search input {
+                width: 100%;
+            }
+
+            .manage-nav {
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-page">
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+
+        <a href="/" class="admin-brand">
+            <span>🌐</span>
+            <div>
+                <strong>NewCity</strong>
+                <small>ADMIN PANEL</small>
+            </div>
+        </a>
+
+        <nav class="admin-navigation">
+            <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-link">▦ Dashboard</a>
+            <a href="{{ url_for('admin_users') }}" class="admin-nav-link">♙ Users</a>
+            <a href="{{ url_for('admin_providers') }}" class="admin-nav-link">♧ Providers</a>
+            <a href="{{ url_for('admin_services') }}" class="admin-nav-link">▤ Services</a>
+            <a href="{{ url_for('admin_categories') }}" class="admin-nav-link">▦ Categories</a>
+            <a href="{{ url_for('admin_reports') }}" class="admin-nav-link">⚑ Reports</a>
+            <a href="{{ url_for('admin_settings') }}" class="admin-nav-link">⚙ Settings</a>
+            <a href="{{ url_for('admin_logout') }}" class="admin-nav-link admin-logout">↪ Logout</a>
+        </nav>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+            <div>
+                <p>NEWCITY ADMIN PANEL</p>
+                <h1>{{ page }} Management</h1>
+            </div>
+
+            <div class="admin-user">
+                👤 <strong>{{ session.get('admin_name','Administrator') }}</strong>
+            </div>
+        </header>
+
+        <div class="admin-manage">
+
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <div class="manage-flash">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <nav class="manage-nav">
+                <a href="{{ url_for('admin_users') }}">Users</a>
+                <a href="{{ url_for('admin_providers') }}">Providers</a>
+                <a href="{{ url_for('admin_services') }}">Services</a>
+                <a href="{{ url_for('admin_categories') }}">Categories</a>
+                <a href="{{ url_for('admin_reports') }}">Reports</a>
+            </nav>
+
+            {% if page in ['Users', 'Providers', 'Services'] %}
+            <section class="manage-card">
+                <form method="GET" class="manage-search">
+                    <input name="q"
+                           value="{{ query or '' }}"
+                           placeholder="Search {{ page|lower }}...">
+
+                    <button type="submit" class="manage-btn">Search</button>
+
+                    <a href="{{ request.path }}">Clear</a>
+                </form>
+            </section>
+            {% endif %}
+
+            {% if page == 'Categories' %}
+            <section class="manage-card">
+                <h2>Add Category</h2>
+
+                <form method="POST" class="manage-search">
+                    <input name="category_name"
+                           placeholder="Category name"
+                           required
+                           maxlength="120">
+
+                    <button type="submit" class="manage-btn">
+                        Add Category
+                    </button>
+                </form>
+            </section>
+            {% endif %}
+
+            <section class="manage-card">
+
+                <div style="overflow-x:auto;">
+
+                    <table class="manage-table">
+
+                        <thead>
+                            <tr>
+
+                                {% if page == 'Users' %}
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>City</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                {% elif page == 'Providers' %}
+                                    <th>Business</th>
+                                    <th>Owner</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>City</th>
+                                    <th>Verification</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                {% elif page == 'Services' %}
+                                    <th>Service</th>
+                                    <th>Category</th>
+                                    <th>City</th>
+                                    <th>Provider</th>
+                                    <th>Price</th>
+                                    <th>Verified</th>
+                                    <th>Visibility</th>
+                                    <th>Action</th>
+
+                                {% elif page == 'Categories' %}
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                {% else %}
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Reporter</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Update</th>
+                                {% endif %}
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for r in rows %}
+                            <tr>
+
+                                {% if page == 'Users' %}
+
+                                    <td>{{ r.first_name }} {{ r.last_name or '' }}</td>
+                                    <td>{{ r.email }}</td>
+                                    <td>{{ r.mobile or '-' }}</td>
+                                    <td>{{ r.city or '-' }}</td>
+
+                                    <td>
+                                        <span class="status-badge {{ 'status-green' if r.is_active else 'status-red' }}">
+                                            {{ 'Active' if r.is_active else 'Inactive' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <form method="POST"
+                                              action="{{ url_for('admin_toggle_user', user_id=r.id) }}">
+                                            <button type="submit"
+                                                    class="manage-btn {{ 'off' if r.is_active else '' }}">
+                                                {{ 'Deactivate' if r.is_active else 'Activate' }}
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                {% elif page == 'Providers' %}
+
+                                    <td><strong>{{ r.business_name }}</strong></td>
+                                    <td>{{ r.owner_name }}</td>
+                                    <td>{{ r.email }}</td>
+                                    <td>{{ r.mobile or '-' }}</td>
+                                    <td>{{ r.city or '-' }}</td>
+
+                                    <td>
+                                        {% if r.is_verified %}
+                                            <span class="status-badge status-green">Verified</span>
+                                        {% else %}
+                                            <span class="status-badge status-yellow">Pending</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge {{ 'status-green' if r.is_active else 'status-red' }}">
+                                            {{ 'Active' if r.is_active else 'Inactive' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="action-group">
+
+                                            {% if not r.is_verified %}
+
+                                                <form method="POST"
+                                                      action="{{ url_for('admin_verify_provider', provider_id=r.id) }}">
+                                                    <button type="submit"
+                                                            class="manage-btn verify small">
+                                                        ✓ Verify
+                                                    </button>
+                                                </form>
+
+                                            {% else %}
+
+                                                <form method="POST"
+                                                      action="{{ url_for('admin_reject_provider', provider_id=r.id) }}">
+                                                    <button type="submit"
+                                                            class="manage-btn reject small">
+                                                        ✕ Reject
+                                                    </button>
+                                                </form>
+
+                                            {% endif %}
+
+                                            <form method="POST"
+                                                  action="{{ url_for('admin_toggle_provider', provider_id=r.id) }}">
+                                                <button type="submit"
+                                                        class="manage-btn {{ 'off' if r.is_active else '' }} small">
+                                                    {{ 'Deactivate' if r.is_active else 'Activate' }}
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+
+                                {% elif page == 'Services' %}
+
+                                    <td>{{ r.service_name }}</td>
+                                    <td>{{ r.category }}</td>
+                                    <td>{{ r.city }}</td>
+                                    <td>{{ r.business_name }}</td>
+                                    <td>₹{{ r.price }}</td>
+
+                                    <td>
+                                        <span class="status-badge {{ 'status-green' if r.is_verified else 'status-yellow' }}">
+                                            {{ 'Yes' if r.is_verified else 'No' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge {{ 'status-green' if r.is_active else 'status-red' }}">
+                                            {{ 'Active' if r.is_active else 'Inactive' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <form method="POST"
+                                              action="{{ url_for('admin_toggle_service', service_id=r.id) }}">
+                                            <button type="submit"
+                                                    class="manage-btn {{ 'off' if r.is_active else '' }}">
+                                                {{ 'Hide' if r.is_active else 'Show' }}
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                {% elif page == 'Categories' %}
+
+                                    <td>{{ r.category_name }}</td>
+
+                                    <td>
+                                        <span class="status-badge {{ 'status-green' if r.is_active else 'status-red' }}">
+                                            {{ 'Active' if r.is_active else 'Inactive' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <form method="POST"
+                                              action="{{ url_for('admin_toggle_category', category_name=r.category_name) }}">
+                                            <button type="submit"
+                                                    class="manage-btn {{ 'off' if r.is_active else '' }}">
+                                                {{ 'Deactivate' if r.is_active else 'Activate' }}
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                {% else %}
+
+                                    <td>{{ r.title }}</td>
+                                    <td>{{ r.description }}</td>
+                                    <td>{{ r.reporter_email or '-' }}</td>
+                                    <td>{{ r.created_at }}</td>
+                                    <td>{{ r.status }}</td>
+
+                                    <td>
+                                        <form method="POST"
+                                              action="{{ url_for('admin_report_status', report_id=r.id) }}">
+
+                                            <select name="status">
+                                                <option>Pending</option>
+                                                <option>Under Review</option>
+                                                <option>Resolved</option>
+                                            </select>
+
+                                            <button type="submit" class="manage-btn">
+                                                Save
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                {% endif %}
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="8" class="manage-empty">
+                                    No {{ page|lower }} found.
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

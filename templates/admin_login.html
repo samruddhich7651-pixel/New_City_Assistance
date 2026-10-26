@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f3f6fb;padding:20px}
+        .admin-auth-card{background:white;width:100%;max-width:430px;padding:38px;border-radius:16px;box-shadow:0 10px 35px #17255412}
+        .admin-auth-card h1{margin:0 0 8px;color:#172554}
+        .admin-auth-card p{color:#64748b;margin-bottom:25px}
+        .admin-auth-card label{display:block;margin:15px 0 7px;font-weight:600;color:#334155}
+        .admin-auth-card input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
+        .admin-auth-card button{width:100%;padding:13px;margin-top:22px;border:0;border-radius:8px;background:#1d4ed8;color:white;font-weight:700;cursor:pointer}
+        .admin-flash{padding:10px;background:#fee2e2;color:#991b1b;border-radius:7px;margin-bottom:12px}
+        .admin-auth-brand{font-size:22px;font-weight:800;color:#1d4ed8;margin-bottom:25px}
+    </style>
+</head>
+<body>
+<div class="admin-auth-page">
+    <div class="admin-auth-card">
+        <div class="admin-auth-brand">🌐 NewCity</div>
+        <h1>Admin Login</h1>
+        <p>Sign in to manage your NewCity platform.</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="admin-flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="email">Admin Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter admin email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+            <button type="submit">Login to Admin Panel</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

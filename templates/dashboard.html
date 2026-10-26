@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="dashboard-body">
+<div class="dashboard-container">
+
+    <header class="dashboard-header">
+        <a href="/dashboard" class="dashboard-logo">New<span>City</span></a>
+        <a href="/profile" class="dashboard-profile"><span>♟</span></a>
+    </header>
+
+    <div class="dashboard-location">
+        <span>◎</span>
+        <span>{{ user_city }}</span>
+        <span>⌄</span>
+    </div>
+
+    <section class="dashboard-welcome">
+        <h2>Hello, {{ session.get('user_name', 'there') }} 👋</h2>
+        <p>Find the best services around you.</p>
+    </section>
+
+    <form class="dashboard-search" action="/explore" method="GET">
+        <span>⌕</span>
+        <input type="text" name="search" placeholder="Search for services...">
+        <input type="hidden" name="city" value="{{ user_city }}">
+        <button type="submit">⌕</button>
+    </form>
+
+    <section class="dashboard-categories">
+        <a href="/explore?category=Accommodation" class="category-item">
+            <div class="category-icon purple">⌂</div>
+            <span>PG / Hostel</span>
+        </a>
+        <a href="/explore?category=Food" class="category-item">
+            <div class="category-icon orange">▣</div>
+            <span>Food</span>
+        </a>
+        <a href="/explore?category=Grocery" class="category-item">
+            <div class="category-icon green">♧</div>
+            <span>Grocery</span>
+        </a>
+        <a href="/explore?category=Healthcare" class="category-item">
+            <div class="category-icon red">✚</div>
+            <span>Medical</span>
+        </a>
+        <a href="/explore?category=Transportation" class="category-item">
+            <div class="category-icon blue">▰</div>
+            <span>Transport</span>
+        </a>
+    </section>
+
+    <!-- Recommended Services -->
+    <section class="dashboard-section">
+        <div class="dashboard-section-heading">
+            <h3>Recommended for You</h3>
+            <a href="/explore">View all</a>
+        </div>
+
+        {% if recommended_services %}
+        <div class="dashboard-service-grid">
+            {% for service in recommended_services %}
+            <a href="{{ url_for('service_details', service_id=service.id) }}"
+               class="dashboard-service-card">
+
+                <div class="service-card-info">
+                    <span>{{ service.category }}</span>
+                    <h4>{{ service.service_name }}</h4>
+
+                    {% if service.price is not none %}
+                    <p>₹{{ service.price }}</p>
+                    {% else %}
+                    <p>Contact for price</p>
+                    {% endif %}
+
+                    <small>📍 {{ service.city }}</small>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="admin-empty">
+            <p>No verified services available yet.</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Nearby Services -->
+    <section class="dashboard-section near-you-section">
+        <div class="dashboard-section-heading">
+            <h3>Near You</h3>
+            <a href="/explore">View all</a>
+        </div>
+
+        {% if nearby_services %}
+        <div class="dashboard-service-grid">
+            {% for service in nearby_services %}
+            <a href="{{ url_for('service_details', service_id=service.id) }}"
+               class="dashboard-service-card">
+
+                <div class="service-card-info">
+                    <span>{{ service.category }}</span>
+                    <h4>{{ service.service_name }}</h4>
+
+                    {% if service.price is not none %}
+                    <p>₹{{ service.price }}</p>
+                    {% else %}
+                    <p>Contact for price</p>
+                    {% endif %}
+
+                    <small>📍 {{ service.address }}</small>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="admin-empty">
+            <p>No services found in your city yet.</p>
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+
+<nav class="dashboard-bottom-nav">
+    <a href="/dashboard" class="bottom-nav-item active">
+        <span>⌂</span><small>Home</small>
+    </a>
+    <a href="/explore" class="bottom-nav-item">
+        <span>⌕</span><small>Explore</small>
+    </a>
+    <a href="/ai-assistant" class="bottom-nav-item ai-nav-item">
+        <span>✧</span><small>AI Assistant</small>
+    </a>
+    <a href="/favourites" class="bottom-nav-item">
+        <span>♡</span><small>Favourites</small>
+    </a>
+    <a href="/profile" class="bottom-nav-item">
+        <span>♟</span><small>Profile</small>
+    </a>
+</nav>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

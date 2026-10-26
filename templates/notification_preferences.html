@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Preferences | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-page">
+    <main class="profile-content">
+
+        <div class="address-page-header">
+            <a href="{{ url_for('settings') }}" class="address-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h2>Notifications</h2>
+                <p>Manage your notification preferences</p>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="flash-message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" class="profile-menu notification-form">
+
+            <label class="notification-option">
+                <span>
+                    <i class="fas fa-envelope"></i>
+                    <span>
+                        <strong>Email Notifications</strong>
+                        <small>Receive updates through email</small>
+                    </span>
+                </span>
+                <input type="checkbox" name="email_notifications"
+                    {% if preferences and preferences.email_notifications %}checked{% endif %}>
+            </label>
+
+            <label class="notification-option">
+                <span>
+                    <i class="fas fa-bell"></i>
+                    <span>
+                        <strong>Service Notifications</strong>
+                        <small>Receive service and booking updates</small>
+                    </span>
+                </span>
+                <input type="checkbox" name="service_notifications"
+                    {% if preferences and preferences.service_notifications %}checked{% endif %}>
+            </label>
+
+            <label class="notification-option">
+                <span>
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span>
+                        <strong>Emergency Notifications</strong>
+                        <small>Receive important emergency alerts</small>
+                    </span>
+                </span>
+                <input type="checkbox" name="emergency_notifications"
+                    {% if preferences and preferences.emergency_notifications %}checked{% endif %}>
+            </label>
+
+            <button type="submit" class="notification-save-btn">
+                <i class="fas fa-save"></i> Save Preferences
+            </button>
+
+        </form>
+
+    </main>
+
+    <nav class="profile-bottom-nav">
+        <a href="/" class="profile-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/explore" class="profile-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/ai-assistant" class="profile-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+        <a href="/favourites" class="profile-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="/profile" class="profile-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

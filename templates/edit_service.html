@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Service | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .edit-service-container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+        .edit-service-container h2 {
+            margin-bottom: 8px;
+            color: #172554;
+        }
+        .edit-service-container p {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+        .edit-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #334155;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .save-btn, .cancel-btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .save-btn {
+            background: #2563eb;
+            color: white;
+        }
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        @media (max-width: 600px) {
+            .edit-service-container {
+                margin: 20px 12px;
+                padding: 20px;
+            }
+            .edit-form {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width,
+            .form-actions {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="edit-service-container">
+        <h2>Edit Your Service</h2>
+        <p>Update your service details below.</p>
+
+        <form method="POST" class="edit-form">
+
+            <div class="form-group">
+                <label>Service Name *</label>
+                <input type="text" name="service_name"
+                       value="{{ service[1] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Category *</label>
+                <input type="text" name="category"
+                       value="{{ service[2] }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Price (₹)</label>
+                <input type="number" name="price" min="0" step="0.01"
+                       value="{{ service[3] if service[3] is not none else '' }}">
+            </div>
+
+            <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" name="contact"
+                       value="{{ service[7] or '' }}">
+            </div>
+
+            <div class="form-group full-width">
+                <label>Address *</label>
+                <input type="text" name="address"
+                       value="{{ service[4] }}" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label>City *</label>
+                <input type="text" name="city"
+                       value="{{ service[5] }}" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Description *</label>
+                <textarea name="description" required>{{ service[6] }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{{ url_for('manage_services') }}" class="cancel-btn">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>

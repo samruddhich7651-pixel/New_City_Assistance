@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Services | CityAssist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="explore-body">
+
+    <div class="explore-container">
+
+        <!-- Header -->
+        <header class="explore-header">
+            <a href="/dashboard" class="explore-logo">
+                New<span>City</span>
+            </a>
+
+            <div class="explore-header-right">
+                <span>{{ city }}</span>
+                <a href="/profile">♟</a>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <form class="explore-search" method="GET" action="{{ url_for('explore') }}">
+            <span>⌕</span>
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search for PG, Tiffin, Electrician..."
+                value="{{ search_query }}">
+
+            <input type="hidden" name="city" value="{{ city }}">
+
+            <button type="submit">⌕</button>
+        </form>
+
+        <!-- Categories -->
+        <div class="explore-categories">
+            <a href="{{ url_for('explore', city=city) }}"
+               class="explore-filter {% if not selected_category %}active{% endif %}">
+                All
+            </a>
+
+            <a href="{{ url_for('explore', city=city, category='Accommodation') }}"
+               class="explore-filter">
+                PG / Hostel
+            </a>
+
+            <a href="{{ url_for('explore', city=city, category='Food') }}"
+               class="explore-filter">
+                Tiffin
+            </a>
+
+            <a href="{{ url_for('explore', city=city, category='Grocery') }}"
+               class="explore-filter">
+                Grocery
+            </a>
+
+            <a href="{{ url_for('explore', city=city, category='Healthcare') }}"
+               class="explore-filter">
+                Medical
+            </a>
+
+            <button type="button" class="explore-filter filter-button">
+                Filter
+            </button>
+        </div>
+
+        <!-- Service Listings -->
+        <section class="explore-list">
+
+            {% if services %}
+                {% for service in services %}
+
+                <a href="{{ url_for('service_details', service_id=service.id) }}"
+                   class="explore-service-card">
+
+                    <img
+                        src="{{ url_for('static', filename='images/default-service.jpg') }}"
+                        alt="{{ service.service_name }}">
+
+                    <div class="explore-service-info">
+
+                        <h3>{{ service.service_name }}</h3>
+
+                        <p>
+                            {% if service.price is not none %}
+                                ₹{{ service.price }}
+                            {% else %}
+                                Price on request
+                            {% endif %}
+                        </p>
+
+                        <div class="explore-service-meta">
+                            <span>{{ service.category }}</span>
+                            <span>📍 {{ service.city }}</span>
+                        </div>
+
+                        {% if service.business_name %}
+                            <small>{{ service.business_name }}</small>
+                        {% endif %}
+
+                    </div>
+
+                    <span class="explore-card-arrow">›</span>
+
+                </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="explore-empty">
+                    <h3>No services found</h3>
+                    <p>Try searching for another service or city.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="dashboard-bottom-nav">
+
+        <a href="/dashboard" class="bottom-nav-item">
+            <span>⌂</span>
+            <small>Home</small>
+        </a>
+
+        <a href="/explore" class="bottom-nav-item active">
+            <span>⌕</span>
+            <small>Explore</small>
+        </a>
+
+        <a href="/ai-assistant" class="bottom-nav-item ai-nav-item">
+            <span>✧</span>
+            <small>AI Assistant</small>
+        </a>
+
+        <a href="/favourites" class="bottom-nav-item">
+            <span>♡</span>
+            <small>Favourites</small>
+        </a>
+
+        <a href="/profile" class="bottom-nav-item">
+            <span>♟</span>
+            <small>Profile</small>
+        </a>
+
+    </nav>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

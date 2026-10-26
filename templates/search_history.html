@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search History | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-page">
+    <main class="profile-content">
+
+        <div class="address-page-header">
+            <a href="{{ url_for('profile') }}" class="address-back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h2>Search History</h2>
+                <p>Your recent searches</p>
+            </div>
+        </div>
+
+        {% if searches %}
+            <div class="saved-address-list">
+                {% for search in searches %}
+                    <section class="saved-address-card">
+                        <div class="saved-address-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+
+                        <div class="saved-address-info">
+                            <h3>{{ search.search_query }}</h3>
+                            <p>
+                                {% if search.city %}
+                                    <i class="fas fa-location-dot"></i>
+                                    {{ search.city }}
+                                {% else %}
+                                    All locations
+                                {% endif %}
+                            </p>
+                            <small>{{ search.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>
+                        </div>
+                    </section>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="address-empty-state">
+                <i class="fas fa-clock-rotate-left"></i>
+                <h3>No Search History</h3>
+                <p>Your recent service searches will appear here.</p>
+                <a href="{{ url_for('explore') }}">Explore Services</a>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <nav class="profile-bottom-nav">
+        <a href="/" class="profile-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="/explore" class="profile-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+        <a href="/ai-assistant" class="profile-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+        <a href="/favourites" class="profile-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="/profile" class="profile-nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

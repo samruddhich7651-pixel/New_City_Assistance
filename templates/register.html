@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | NewCity</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="register-page">
+
+        <div class="register-card">
+
+            <!-- Logo -->
+            <a href="/" class="logo">
+                <span>🌐</span> NewCity
+            </a>
+
+            <!-- Heading -->
+            <div class="register-heading">
+                <h1>Create Your Account</h1>
+                <p>Join NewCity and explore trusted local services.</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Registration Form -->
+            <form action="{{ url_for('register') }}"
+                  method="POST"
+                  class="register-form">
+
+                <div class="form-group">
+                    <label for="first_name">Full Name</label>
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        placeholder="Enter your full name"
+                        required
+                        autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        placeholder="Enter your phone number"
+                        autocomplete="tel">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email (Optional)</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            minlength="8"
+                            required
+                            autocomplete="new-password">
+
+                        <button type="button"
+                                class="toggle-password"
+                                data-target="password"
+                                aria-label="Show password">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            minlength="8"
+                            required
+                            autocomplete="new-password">
+
+                        <button type="button"
+                                class="toggle-password"
+                                data-target="confirm_password"
+                                aria-label="Show password">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="signup-btn">
+                    Sign Up
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span></span>
+                <p>or sign up with</p>
+                <span></span>
+            </div>
+
+            <!-- Google Signup -->
+            <a href="#" class="google-btn">
+                <span>G</span>
+                Google
+            </a>
+
+            <!-- Login Link -->
+            <div class="login-text">
+                <p>
+                    Already have an account?
+                    <a href="{{ url_for('login') }}">Login</a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
+</body>
+</html>

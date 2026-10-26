@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favourites | NewCity</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="favourites-page">
+
+    <!-- Header -->
+    <header class="favourites-header">
+        <a href="/dashboard" class="favourites-logo">
+            <i class="fas fa-location-dot"></i>
+            <span>NewCity</span>
+        </a>
+
+        <a href="/profile" class="favourites-profile">
+            <i class="fas fa-user"></i>
+        </a>
+    </header>
+
+    <!-- Page Heading -->
+    <section class="favourites-heading">
+        <h2>My Favourites</h2>
+        <p>Your saved services</p>
+    </section>
+
+    <!-- Favourite Services -->
+    <main class="favourites-list">
+
+        {% if services %}
+
+            {% for service in services %}
+
+            <article class="favourite-card">
+
+                <img
+                    src="{{ url_for('static', filename='images/default-service.jpg') }}"
+                    alt="{{ service.service_name }}">
+
+                <div class="favourite-details">
+
+                    <h3>{{ service.service_name }}</h3>
+
+                    <p class="favourite-category">
+                        {{ service.category }}
+                    </p>
+
+                    <p class="favourite-price">
+                        {% if service.price is not none %}
+                            ₹{{ service.price }}
+                        {% else %}
+                            Price on request
+                        {% endif %}
+                    </p>
+
+                    <div class="favourite-meta">
+                        <span>
+                            {{ service.city }}
+                        </span>
+                    </div>
+
+                    {% if service.business_name %}
+                        <small>{{ service.business_name }}</small>
+                    {% endif %}
+
+                    <p>{{ service.address }}</p>
+
+                </div>
+
+                <form method="POST"
+                      action="{{ url_for('toggle_favourite', service_id=service.id) }}">
+
+                    <button
+                        class="favourite-heart saved"
+                        type="submit"
+                        aria-label="Remove favourite">
+
+                        <i class="fas fa-heart"></i>
+
+                    </button>
+
+                </form>
+
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="explore-empty">
+                <h3>No favourites yet</h3>
+                <p>Explore services and save your favourite ones here.</p>
+                <a href="{{ url_for('explore') }}">Explore Services</a>
+            </div>
+
+        {% endif %}
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="favourites-bottom-nav">
+
+        <a href="/dashboard" class="favourites-nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+
+        <a href="/explore" class="favourites-nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </a>
+
+        <a href="/ai-assistant" class="favourites-nav-item">
+            <i class="fas fa-robot"></i>
+            <span>AI Assistant</span>
+        </a>
+
+        <a href="/favourites" class="favourites-nav-item active">
+            <i class="fas fa-heart"></i>
+            <span>Favourites</span>
+        </a>
+
+        <a href="/profile" class="favourites-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+
+    </nav>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
+

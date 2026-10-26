@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details | CityAssist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="service-details-page">
+
+    <nav class="navbar">
+        <a href="/" class="logo">City<span>Assist</span></a>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/explore">Explore Services</a>
+            <a href="/about">About Us</a>
+            <a href="/login">Logout</a>
+        </div>
+    </nav>
+
+    <main class="service-details-container">
+
+        <a href="/explore" class="back-link">← Back to Explore Services</a>
+
+        <section class="service-details-card">
+            <div class="service-placeholder">🏠</div>
+
+            <div class="service-information">
+                <span class="service-status">VERIFICATION PENDING</span>
+                <p class="eyebrow">SERVICE DETAILS</p>
+                <h1>Service Name</h1>
+                <p class="service-category">PG & Accommodation</p>
+
+                <div class="service-meta">
+                    <span>📍 Location: To be updated</span>
+                    <span>⭐ Rating: Not available yet</span>
+                </div>
+
+                <div class="service-description">
+                    <h2>About This Service</h2>
+                    <p>Service information will be displayed here after a provider registers and submits their listing.</p>
+                </div>
+
+                <div class="service-description">
+                    <h2>Pricing</h2>
+                    <p>Price details have not been provided yet.</p>
+                </div>
+
+                <div class="service-description">
+                    <h2>Provider Information</h2>
+                    <p>Verified provider contact details will appear here after admin approval.</p>
+                </div>
+
+                <button type="button" class="contact-provider-button" disabled>
+                    Contact Provider
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 CityAssist. Your new city, made easier.</p>
+    </footer>
+
+</body>
+</html>

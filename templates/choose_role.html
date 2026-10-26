@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Role | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="choose-role-page">
+
+    <main class="choose-role-container">
+        <a href="/" class="choose-role-logo">🌐 NewCity</a>
+
+        <div class="choose-role-heading">
+            <h1>Welcome to NewCity!</h1>
+            <p>First, tell us how you want to use NewCity.</p>
+        </div>
+
+        <div class="role-cards">
+            <a href="{{ url_for('login') }}?role=user" class="role-card">
+                <div class="role-icon">👤</div>
+                <h2>Service Receiver</h2>
+                <p>Find nearby services, explore providers and get the help you need.</p>
+                <span>Continue as User →</span>
+            </a>
+
+            <a href="{{ url_for('login') }}?role=provider" class="role-card">
+                <div class="role-icon">🏪</div>
+                <h2>Service Provider</h2>
+                <p>Register your business, manage services and connect with customers.</p>
+                <span>Continue as Provider →</span>
+            </a>
+        </div>
+
+        <p class="choose-role-footer">
+            New to NewCity? Choose your role to get started.
+        </p>
+    </main>
+
+</body>
+</html>

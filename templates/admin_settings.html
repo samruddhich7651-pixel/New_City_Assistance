@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings | NewCity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .settings-wrap{max-width:950px;margin:auto}
+        .settings-card{background:white;padding:25px;border-radius:12px;margin-bottom:22px;box-shadow:0 4px 18px #1725540d}
+        .settings-card h2{margin-top:0;color:#172554}
+        .settings-card label{display:block;margin:14px 0 6px;font-weight:600}
+        .settings-card input,.settings-card textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:7px;box-sizing:border-box}
+        .settings-card textarea{min-height:90px;resize:vertical}
+        .settings-btn{padding:11px 18px;border:0;border-radius:7px;background:#1d4ed8;color:white;font-weight:600;cursor:pointer;margin-top:15px}
+        .settings-danger{background:#fee2e2;color:#b91c1c}
+        .settings-flash{padding:10px;background:#eff6ff;color:#1d4ed8;border-radius:7px;margin-bottom:12px}
+    </style>
+</head>
+<body class="admin-page">
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <a href="/" class="admin-brand"><span>🌐</span><div><strong>NewCity</strong><small>ADMIN PANEL</small></div></a>
+        <nav class="admin-navigation">
+            <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-link">▦ Dashboard</a>
+            <a href="{{ url_for('admin_settings') }}" class="admin-nav-link active">⚙ Settings</a>
+            <a href="{{ url_for('admin_logout') }}" class="admin-nav-link admin-logout">↪ Logout</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div><p>NEWCITY ADMIN PANEL</p><h1>Settings</h1></div>
+        </header>
+
+        <div class="settings-wrap">
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}<div class="settings-flash">{{ message }}</div>{% endfor %}
+            {% endwith %}
+
+            <section class="settings-card">
+                <h2>Admin Profile</h2>
+                <form method="POST">
+                    <input type="hidden" name="form_action" value="profile">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" value="{{ admin.full_name }}" required>
+                    <button class="settings-btn" type="submit">Save Profile</button>
+                </form>
+            </section>
+
+            <section class="settings-card">
+                <h2>Admin Email</h2>
+                <form method="POST">
+                    <input type="hidden" name="form_action" value="account">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ admin.email }}" required>
+                    <button class="settings-btn" type="submit">Update Email</button>
+                </form>
+            </section>
+
+            <section class="settings-card">
+                <h2>Change Password</h2>
+                <p>Update your admin account password.</p>
+                <a href="{{ url_for('admin_change_password') }}">Change Password →</a>
+            </section>
+
+            <section class="settings-card">
+                <h2>Website Information</h2>
+                <form method="POST">
+                    <input type="hidden" name="form_action" value="website">
+
+                    <label>Website Name</label>
+                    <input name="website_name" value="{{ site_info.website_name }}" required>
+
+                    <label>Website Description</label>
+                    <textarea name="description">{{ site_info.description or '' }}</textarea>
+
+                    <label>Support Email</label>
+                    <input type="email" name="support_email" value="{{ site_info.support_email or '' }}">
+
+                    <label>Support Phone</label>
+                    <input name="support_phone" value="{{ site_info.support_phone or '' }}">
+
+                    <label>Service Area</label>
+                    <input name="service_area" value="{{ site_info.service_area or '' }}">
+
+                    <label>About Text</label>
+                    <textarea name="about_text">{{ site_info.about_text or '' }}</textarea>
+
+                    <label>Terms and Conditions</label>
+                    <textarea name="terms_text">{{ site_info.terms_text or '' }}</textarea>
+
+                    <label>Privacy Policy</label>
+                    <textarea name="privacy_text">{{ site_info.privacy_text or '' }}</textarea>
+
+                    <button class="settings-btn" type="submit">Save Website Information</button>
+                </form>
+            </section>
+
+            <section class="settings-card">
+                <h2>Security</h2>
+                <p>Log out all other admin sessions or deactivate this admin account.</p>
+
+                <form method="POST" onsubmit="return confirm('Log out all admin sessions?');">
+                    <input type="hidden" name="form_action" value="logout_all">
+                    <button class="settings-btn" type="submit">Logout All Sessions</button>
+                </form>
+
+                <form method="POST" onsubmit="return confirm('Are you sure you want to deactivate this admin account?');">
+                    <input type="hidden" name="form_action" value="deactivate">
+                    <button class="settings-btn settings-danger" type="submit">Deactivate Admin Account</button>
+                </form>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>
