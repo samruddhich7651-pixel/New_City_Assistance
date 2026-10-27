@@ -26,9 +26,21 @@
             <a href="/explore">Explore</a>
             <a href="/ai-assistant">AI Assistant</a>
             <a href="/emergency">Emergency</a>
+
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            {% elif session.get('provider_id') %}
+                <a href="{{ url_for('provider_dashboard') }}">Provider Dashboard</a>
+            {% endif %}
         </div>
 
-       <a href="{{ url_for('choose_role') }}" class="login-btn">Login</a>
+        <div class="nav-auth">
+            {% if session.get('user_id') or session.get('provider_id') %}
+                <a href="{{ url_for('logout') }}" class="login-btn">Logout</a>
+            {% else %}
+                <a href="{{ url_for('choose_role') }}" class="login-btn">Login</a>
+            {% endif %}
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -43,39 +55,38 @@
         </div>
 
         <!-- Search Box -->
-        <!-- Search Box -->
-<form class="search-box" method="GET" action="{{ url_for('explore') }}">
+        <form class="search-box" method="GET" action="{{ url_for('explore') }}">
 
-    <div class="location-field">
-        <label>Where are you?</label>
-        <div class="input-wrapper">
-            <span>📍</span>
-            <input
-                type="text"
-                name="city"
-                placeholder="Enter your city"
-                required
-            >
-        </div>
-    </div>
+            <div class="location-field">
+                <label>Where are you?</label>
+                <div class="input-wrapper">
+                    <span>📍</span>
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Enter your city"
+                        required
+                    >
+                </div>
+            </div>
 
-    <div class="service-field">
-        <label>What do you need?</label>
+            <div class="service-field">
+                <label>What do you need?</label>
 
-        <div class="search-input">
-            <input
-                type="text"
-                name="search"
-                placeholder="Search for PG, Tiffin, Electrician..."
-            >
+                <div class="search-input">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search for PG, Tiffin, Electrician..."
+                    >
 
-            <button type="submit" class="search-btn">
-                🔍 Search
-            </button>
-        </div>
-    </div>
+                    <button type="submit" class="search-btn">
+                        🔍 Search
+                    </button>
+                </div>
+            </div>
 
-</form>
+        </form>
     </section>
 
     <!-- Emergency Section -->
